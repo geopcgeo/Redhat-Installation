@@ -35,7 +35,7 @@ class app::dbrestore {
 class app::php_memory {
 	 exec { "increase-php-memory-limit":
 			command => "sed -i 's/memory_limit = .*/memory_limit = $application_php_memory_limit/' ${php::params::configfile}",
-       	require => Package["${php::params::packagename"]
+       	require => Package["${php::params::packagename}"]
 }
 }
 #This will create symlink for drupal files folder.
