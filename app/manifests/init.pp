@@ -76,8 +76,8 @@ class app::write_permissions_to_files_folder {
 }
 
 class app {
-	include apache::params
-	include php::params
+	require apache::params
+	require php::params
 	include app::gitclone_db, app::gitclone_app, app::dbcreate, app::dbrestore, app::php_memory, app::symlink, app::edit_for_cleanurl, app::edit_for_documentroot, app::write_permissions_to_files_folder, app::change_ownership_of_a_folder
 }
 
