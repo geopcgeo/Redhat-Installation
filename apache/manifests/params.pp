@@ -104,5 +104,12 @@ class apache::params  {
         default => "/var/run/httpd.pid",
     }
 
+	$virtualhostconf = $operatingsystem ? {
+		ubuntu  => "/etc/apache2/sites-available/default",
+		centos  => "/etc/httpd/conf/httpd.conf",
+		default => "/etc/httpd/conf/httpd.conf",
+	}
+	
+	
 }
 
