@@ -52,18 +52,18 @@ class app::change_ownership_of_a_folder
 						{
 							centos: {       exec { "change-ownership-of-a-folder":
                                 command => "/etc/puppet/modules/app/scripts/centos-change-folder-ownership.sh",
-								require => Package["${apache::params::servicename}"]
+								require => Class ["app::symlink"],
 								}
 									}
 							redhat: {       exec { "change-ownership-of-a-folder":
                                 command => "/etc/puppet/modules/app/scripts/centos-change-folder-ownership.sh",
-								require => Package["${apache::params::servicename}"]
+								require => Class ["app::symlink"],
 								}
 									}
 							default:
 									{       exec { "change-ownership-of-a-folder":
                                 command => "/etc/puppet/modules/app/scripts/ubuntu-change-folder-ownership.sh",
-								require => Package["${apache::params::servicename}"]
+								require => Class ["app::symlink"],
 								}
 									}
 						}
