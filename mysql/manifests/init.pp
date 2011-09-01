@@ -18,6 +18,7 @@ class mysql {
         ensure => present,
     }
 
+	
     service { "mysql":
         name       => "${mysql::params::servicename}",
         ensure     => running,
@@ -31,13 +32,13 @@ class mysql {
 
     file { "mysql.conf":
         path    => "${mysql::params::configfile}",
+		source => "puppet:///modules/mysql/my.cnf",
         mode    => "${mysql::params::configfile_mode}",
         owner   => "${mysql::params::configfile_owner}",
         group   => "${mysql::params::configfile_group}",
         ensure  => present,
         require => Package["mysql"],
         notify  => Service["mysql"],
-#        content => template("mysql/mysql.conf.erb"),
     }
 
    

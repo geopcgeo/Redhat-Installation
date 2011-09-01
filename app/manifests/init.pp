@@ -78,21 +78,24 @@ class app::edit_for_documentroot
 	case $operatingsystem
 		{
 			centos:
-					{	exec  "edit-documentRoot-folder-path":
+					{	exec {"edit-documentRoot-folder-path":
 						command => "/etc/puppet/modules/app/scripts/centos-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_centos $application_apache_current_documentroot",
 						require => Package["${apache::params::servicename}"]
+					}
 					}
 			redhat:
 					{
-						exec  "edit-documentRoot-folder-path":
+						exec { "edit-documentRoot-folder-path":
 						command => "/etc/puppet/modules/app/scripts/centos-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_centos $application_apache_current_documentroot",
 						require => Package["${apache::params::servicename}"]
 					}
+					}
 			default:
 					{
-						exec  "edit-documentRoot-folder-path":
+						exec { "edit-documentRoot-folder-path":
 						command => "/etc/puppet/modules/app/scripts/ubuntu-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_ubuntu $application_apache_current_documentroot",
 						require => Package["${apache::params::servicename}"]
+					}
 					}
 	}
 }
