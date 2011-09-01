@@ -21,7 +21,13 @@ $application_mysql_dbname="medigy"
 #The memeory limit of the PHP
 $application_php_memory_limit="384M"
 
-#the proposed document root of the apache2 
+#the default document root of ubuntu and debian
+$application_apache_default_documentroot_ubuntu="/var/www"
+
+#the default document root of redhat and centos
+$application_apache_default_documentroot_centos="/var/www/html"
+
+#the proposed document root of all OS 
 $application_apache_current_documentroot="/var/www/html/edge.devl.medigy.com/medigy-drupal/public_site/"
 
 #files folder drupal to which the sym link to be created

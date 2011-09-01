@@ -46,11 +46,24 @@ class app::symlink{
 }
 }
 #This will change ownership of apache root folder to required user.
-class app::change_ownership_of_a_folder{
-	exec { "change-ownership-of-a-folder":
-		command => "/etc/puppet/modules/app/scripts/change-folder-ownership.sh ${apache::params::username}",
-		require => Class ["app::symlink"],
-}
+class app::change_ownership_of_a_folder
+{
+                case $operatingsystem
+						{
+							centos: {       exec { "change-ownership-of-a-folder":
+                                command => "/etc/puppet/modules/app/scripts/centos-change-folder-ownership.sh",
+													}
+									}
+							redhat: {       exec { "change-ownership-of-a-folder":
+                                command => "/etc/puppet/modules/app/scripts/centos-change-folder-ownership.sh",
+												}
+									}
+							default:
+									{       exec { "change-ownership-of-a-folder":
+                                command => "/etc/puppet/modules/app/scripts/ubuntu-change-folder-ownership.sh",
+													}
+									}
+						}
 }
 #This settings for enabling clean url.
 class app::edit_for_cleanurl{
@@ -60,11 +73,28 @@ class app::edit_for_cleanurl{
 }
 }
 #This will edit apache document root.
-class app::edit_for_documentroot{
-	exec { "edit-documentRoot-folder-path":
-       command => "/etc/puppet/modules/app/scripts/edit-documentRoot-folder-path.sh ${apache::params::documentroot} $application_apache_current_documentroot ${apache::params::virtualhostconf}",
-      require => Package["${apache::params::servicename}"]
-}
+class app::edit_for_documentroot
+{	
+	case $operatingsystem
+		{
+			centos:
+					{	exec  "edit-documentRoot-folder-path":
+						command => "/etc/puppet/modules/app/scripts/centos-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_centos $application_apache_current_documentroot",
+						require => Package["${apache::params::servicename}"]
+					}
+			redhat:
+					{
+						exec  "edit-documentRoot-folder-path":
+						command => "/etc/puppet/modules/app/scripts/centos-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_centos $application_apache_current_documentroot",
+						require => Package["${apache::params::servicename}"]
+					}
+			default:
+					{
+						exec  "edit-documentRoot-folder-path":
+						command => "/etc/puppet/modules/app/scripts/ubuntu-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_ubuntu $application_apache_current_documentroot",
+						require => Package["${apache::params::servicename}"]
+					}
+	}
 }
 #This will give write permission to files folder.
 class app::write_permissions_to_files_folder {
