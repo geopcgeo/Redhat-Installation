@@ -7,7 +7,7 @@
 # Usage:
 # include mysql
 #
-class mysql {
+class mysql::install {
 
     # Load the variables used in this module. Check the params.pp file 
     require mysql::params
@@ -30,17 +30,28 @@ class mysql {
         subscribe  => File["mysql.conf"],
     }
 
-    file { "mysql.conf":
-        path    => "${mysql::params::configfile}",
-		source => "puppet:///modules/mysql/my.cnf",
-        mode    => "${mysql::params::configfile_mode}",
+}
+
+class mysql::config {
+	file { "mysql.conf":
+		ensure  => present,
+        require => Package["mysql"],
+		case $operatingsystem
+			{	
+				centos: {	path    => "${mysql::params::configfile}",
+							source => "puppet:///modules/mysql/centos/my.cnf",
+						}
+				default:{	path    => "${mysql::params::configfile}",
+							source => "puppet:///modules/mysql/ubuntu/my.cnf",
+						}
+			}
+		mode    => "${mysql::params::configfile_mode}",
         owner   => "${mysql::params::configfile_owner}",
         group   => "${mysql::params::configfile_group}",
-        ensure  => present,
-        require => Package["mysql"],
-        notify  => Service["mysql"],
-    }
+		notify  => Service["mysql"],
 
-   
+	}		
+class mysql {
+	include mysql::install, mysql::config
 }
 
