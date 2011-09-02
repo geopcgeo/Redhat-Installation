@@ -1,4 +1,4 @@
-This contains complete the generalized Medigy puppet script for all Linux Operating Systems
+This contains complete generalized Medigy puppet script for all Linux Operating Systems
 *******************************************************************************************
 
 Server Configuration Management Setup
