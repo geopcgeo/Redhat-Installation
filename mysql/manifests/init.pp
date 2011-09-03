@@ -1,57 +1,57 @@
-# Class: mysql
-#
-# Manages mysql.
-# Include it to install and run mysql
-# It defines package, service, main configuration file.
-#
-# Usage:
-# include mysql
-#
 class mysql::install {
 
-    # Load the variables used in this module. Check the params.pp file 
-    require mysql::params
-
+    # Load the variables used in this module. Check the params.pp file
     # Basic Package - Service - Configuration file management
     package { "mysql":
         name   => "${mysql::params::packagename}",
         ensure => present,
     }
 
-	
-    service { "mysql":
+
+}
+
+class mysql::config {
+                case $operatingsystem
+                                {
+                                centos: {       file { "mysql.conf":
+                                                        path    => "${mysql::params::configfile}",
+                                                        source => "puppet:///modules/mysql/centos/my.cnf",
+                                                        mode    => "${mysql::params::configfile_mode}",
+                                                        owner   => "${mysql::params::configfile_owner}",
+                                                        group   => "${mysql::params::configfile_group}",
+                                                        ensure  => present,
+                                                        require => Class["mysql::install"],
+                                                        notify  => Class["mysql::service"],
+                                                        }
+                                                }
+                                default:{       file { "mysql.conf":
+                                                        path    => "${mysql::params::configfile}",
+                                                        source => "puppet:///modules/mysql/ubuntu/my.cnf",
+                                                        mode    => "${mysql::params::configfile_mode}",
+                                                        owner   => "${mysql::params::configfile_owner}",
+                                                        group   => "${mysql::params::configfile_group}",
+                                                        ensure  => present,
+                                                        require => Class["mysql::install"],
+                                                        notify  => Class["mysql::service"],
+                                                        }
+                                                }
+                }
+        }
+
+class mysql::service {
+
+service { "mysql":
         name       => "${mysql::params::servicename}",
         ensure     => running,
         enable     => true,
         hasrestart => true,
         hasstatus  => "${mysql::params::hasstatus}",
         pattern    => "${mysql::params::processname}",
-        require    => Package["mysql"],
-        subscribe  => File["mysql.conf"],
-    }
-
+        require         => Class["mysql::install"],
+        }
 }
 
-class mysql::config {
-	file { "mysql.conf":
-		ensure  => present,
-        require => Package["mysql"],
-		case $operatingsystem
-			{	
-				centos: {	path    => "${mysql::params::configfile}",
-							source => "puppet:///modules/mysql/centos/my.cnf",
-						}
-				default:{	path    => "${mysql::params::configfile}",
-							source => "puppet:///modules/mysql/ubuntu/my.cnf",
-						}
-			}
-		mode    => "${mysql::params::configfile_mode}",
-        owner   => "${mysql::params::configfile_owner}",
-        group   => "${mysql::params::configfile_group}",
-		notify  => Service["mysql"],
-
-	}		
 class mysql {
-	include mysql::install, mysql::config
+        require mysql::params
+        include mysql::install, mysql::config, mysql::service
 }
-
