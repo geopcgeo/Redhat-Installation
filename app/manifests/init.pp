@@ -21,7 +21,7 @@ class app::gitclone_app {
 class app::dbcreate {
 	exec { "db-create":
 		command =>"/etc/puppet/modules/app/scripts/mysql-db-create.sh $application_mysql_dbname",
-		require => Service["${apache::params::servicename}"]
+		require => Service["${mysql::params::servicename}"]
 }
 }
 #This will restore MySQL database.
@@ -83,21 +83,21 @@ class app::edit_for_documentroot
 			centos:
 					{	exec {"edit-documentRoot-folder-path":
 						command => "/etc/puppet/modules/app/scripts/centos-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_centos $application_apache_current_documentroot",
-						require => Package["${apache::params::servicename}"]
+						require => Class ["app::symlink"],
 					}
 					}
 			redhat:
 					{
 						exec { "edit-documentRoot-folder-path":
 						command => "/etc/puppet/modules/app/scripts/centos-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_centos $application_apache_current_documentroot",
-						require => Package["${apache::params::servicename}"]
+						require => Class ["app::symlink"],
 					}
 					}
 			default:
 					{
 						exec { "edit-documentRoot-folder-path":
 						command => "/etc/puppet/modules/app/scripts/ubuntu-edit-documentRoot-folder-path.sh $application_apache_default_documentroot_ubuntu $application_apache_current_documentroot",
-						require => Package["${apache::params::servicename}"]
+						require => Class ["app::symlink"],
 					}
 					}
 	}
