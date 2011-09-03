@@ -13,24 +13,24 @@ class mysql::install {
 class mysql::config {
                 case $operatingsystem
                                 {
-                                centos: {       file { "mysql.conf":
+                                centos: {       file { "/etc/my.cnf":
                                                         path    => "${mysql::params::configfile}",
+														ensure  => present,
                                                         source => "puppet:///modules/mysql/centos/my.cnf",
                                                         mode    => "${mysql::params::configfile_mode}",
                                                         owner   => "${mysql::params::configfile_owner}",
                                                         group   => "${mysql::params::configfile_group}",
-                                                        ensure  => present,
                                                         require => Class["mysql::install"],
                                                         notify  => Class["mysql::service"],
                                                         }
                                                 }
-                                default:{       file { "mysql.conf":
+                                default:{       file { "/etc/mysql/my.cnf":
                                                         path    => "${mysql::params::configfile}",
+														ensure  => present,
                                                         source => "puppet:///modules/mysql/ubuntu/my.cnf",
                                                         mode    => "${mysql::params::configfile_mode}",
                                                         owner   => "${mysql::params::configfile_owner}",
                                                         group   => "${mysql::params::configfile_group}",
-                                                        ensure  => present,
                                                         require => Class["mysql::install"],
                                                         notify  => Class["mysql::service"],
                                                         }
