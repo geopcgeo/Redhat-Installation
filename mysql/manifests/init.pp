@@ -6,7 +6,9 @@ class mysql::install {
         name   => "${mysql::params::packagename}",
         ensure => present,
     }
-
+	package { "mysql-client" :
+		ensure => present,
+		}
 
 }
 
